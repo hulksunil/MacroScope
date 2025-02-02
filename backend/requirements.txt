@@ -5,3 +5,6 @@ numpy
 opencv-python
 tensorflow
 flask
+flask_cors
+google.generativeai
+python-dotenv
