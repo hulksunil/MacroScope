@@ -121,6 +121,44 @@ def get_nutrients():
     return jsonify({"food_item": food_item, "nutrition_info": nutrition_info})
 
 
+def get_meal_suggestions(target_calories, target_protein):
+    """Fetches meal suggestions based on target calorie & protein goals."""
+    prompt = (
+        f"Suggest a list of meals to eat today that total around {target_calories} calories "
+        f"and provide at least {target_protein}g of protein. "
+        "Return JSON with an array 'meals' containing objects with 'name', 'calories', 'protein_g' and absolutely nothing else."
+    )
+
+    response = genai.generate_text(prompt=prompt)
+
+    try:
+        meal_suggestions = response.text.strip()
+        return eval(meal_suggestions)  # Convert to dictionary
+    except:
+        return {"error": "Failed to parse response"}
+
+@app.route('/meal-suggestions', methods=['POST'])
+def meal_suggestions():
+    """API endpoint to suggest meals based on calorie & protein goals."""
+    try:
+        data = request.json
+        target_calories = data.get("target_calories")
+        target_protein = data.get("target_protein")
+
+        if target_calories is None or target_protein is None:
+            return jsonify({"error": "Missing target_calories or target_protein"}), 400
+
+        meal_data = get_meal_suggestions(target_calories, target_protein)
+        return jsonify({
+            "target_calories": target_calories,
+            "target_protein": target_protein,
+            "suggested_meals": meal_data.get("meals", [])
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     # Run the Flask app
     app.run(host='0.0.0.0', port=5001, debug=True)
