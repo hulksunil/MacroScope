@@ -7,11 +7,17 @@ import tensorflow as tf
 import tensorflow_hub as hub
 from flask import Flask, request, jsonify
 
+#to allow thing from iphone
+from flask_cors import CORS
+
+
 m = hub.KerasLayer(
     'https://www.kaggle.com/models/google/aiy/TensorFlow1/vision-classifier-food-v1/1')
 
 # Initialize Flask app
 app = Flask(__name__)
+
+CORS(app)
 
 def get_top_5_predictions(output, labels_list):
     # Convert logits to probabilities
@@ -58,4 +64,4 @@ def classify_food():
 
 if __name__ == '__main__':
     # Run the Flask app
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)

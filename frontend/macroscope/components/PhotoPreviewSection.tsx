@@ -5,25 +5,34 @@ import { TouchableOpacity, SafeAreaView, Image, StyleSheet, View, Text } from 'r
 
 const PhotoPreviewSection = ({
     photo,
-    handleRetakePhoto
+    handleRetakePhoto,
+    handleUploadPhoto
 }: {
     photo: CameraCapturedPicture;
     handleRetakePhoto: () => void;
+    handleUploadPhoto?: () => Promise<void>;
 }) => (
     <SafeAreaView style={styles.container}>
         <View style={styles.box}>
             <Image
-                style={styles.previewContainer}  // Fixed typo
-                source={{ uri: 'data:image/jpg;base64,' + photo.base64 }}
+                style={styles.previewContainer}
+                source={{ uri: photo.uri }}  // ✅ Using URI instead of base64
             />
         </View>
 
         <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={handleRetakePhoto}>
-            <Text>
+                <Text>
                     <Fontisto name="trash" size={36} color="black" />
                 </Text>
             </TouchableOpacity>
+
+            {/* Upload Button */}
+            {handleUploadPhoto && ( // ✅ Ensuring function exists before calling
+                <TouchableOpacity onPress={handleUploadPhoto} style={styles.uploadButton}>
+                    <Text style={{ color: 'white' }}>Upload Photo</Text>
+                </TouchableOpacity>
+            )}
         </View>
     </SafeAreaView>
 );
@@ -43,7 +52,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: "center",
     },
-    previewContainer: {  // Fixed typo
+    previewContainer: {
         width: '90%',
         height: '80%',
         borderRadius: 15
@@ -61,6 +70,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginBottom: 28
+    },
+    uploadButton: {
+        marginTop: 10,
+        padding: 10,
+        backgroundColor: 'blue',
+        borderRadius: 8
     }
 });
 

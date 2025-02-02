@@ -2,7 +2,8 @@ import PhotoPreviewSection from '@/components/PhotoPreviewSection';
 import { AntDesign } from '@expo/vector-icons';
 import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import { useRef, useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import axios from 'axios';
 
 export default function Camera() {
   const [facing, setFacing] = useState<CameraType>('back');
@@ -44,7 +45,40 @@ export default function Camera() {
 
   const handleRetakePhoto = () => setPhoto(null);
 
-  if (photo) return <PhotoPreviewSection photo={photo} handleRetakePhoto={handleRetakePhoto} />
+const handleUploadPhoto = async () => {
+  if (!photo) return;
+
+  const fileUri = photo.uri; // File path
+  const fileName = 'image.jpg';
+
+  // Fetch the image as a Blob from the URI
+  const response = await fetch(photo.uri);
+  const blob = await response.blob();
+
+
+  // Create FormData for the file
+  const formData = new FormData();
+  
+  formData.append('image', {
+    uri: fileUri, // ✅ Correct way to send file in React Native
+    name: fileName,
+    type: 'image/jpeg',
+  } as any); // ✅ Type assertion to avoid TypeScript error
+
+  try {
+    //172.20.10.3 -> My(Assane) Mac's IP address
+    const response = await axios.post('http://172.20.10.3:5001/classify', formData);
+
+    console.log('Response from server:', response.data);
+  } catch (error) {
+    console.error('Upload failed:', error);
+  }
+};
+
+  
+  if (photo) {
+    return <PhotoPreviewSection photo={photo} handleRetakePhoto={handleRetakePhoto} handleUploadPhoto={handleUploadPhoto} />;
+  }
 
   return (
     <View style={styles.container}>
