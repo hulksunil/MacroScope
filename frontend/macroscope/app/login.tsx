@@ -9,9 +9,11 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 
 export default function LogIn() {
+  const router = useRouter();
+
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -39,7 +41,10 @@ export default function LogIn() {
       </SafeAreaView>
 
       <Link href="/">
-        <TouchableOpacity style={styles.TouchableOpacityButton}>
+        <TouchableOpacity
+          style={styles.TouchableOpacityButton}
+          onPress={() => router.push("/")}
+        >
           <Ionicons
             name="arrow-forward"
             size={24}
