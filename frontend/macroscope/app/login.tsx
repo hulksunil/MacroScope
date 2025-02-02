@@ -17,6 +17,16 @@ export default function LogIn() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const validateInput = () => {
+    if (email === "" || password === "") {
+      alert("Please fill in all fields");
+      return false;
+    }
+    alert(email + " " + password);
+    router.push("/nutrients"); // naviage to the page after log in
+    return true;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ThemedText type="title" style={styles.sharedText}>
@@ -28,7 +38,7 @@ export default function LogIn() {
           style={[styles.sharedText, styles.input]}
           onChangeText={setEmail}
           value={email}
-          placeholder="Username"
+          placeholder="Email"
         />
 
         <TextInput
@@ -40,20 +50,18 @@ export default function LogIn() {
         />
       </SafeAreaView>
 
-      <Link href="/">
-        <TouchableOpacity
-          style={styles.TouchableOpacityButton}
-          onPress={() => router.push("/")}
-        >
-          <Ionicons
-            name="arrow-forward"
-            size={24}
-            color="black"
-            style={styles.icon}
-          />
-          <Text style={[styles.sharedText, styles.buttonText]}>Log in</Text>
-        </TouchableOpacity>
-      </Link>
+      <TouchableOpacity
+        style={styles.TouchableOpacityButton}
+        onPress={validateInput}
+      >
+        <Ionicons
+          name="arrow-forward"
+          size={24}
+          color="black"
+          style={styles.icon}
+        />
+        <Text style={[styles.sharedText, styles.buttonText]}>Log in</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
