@@ -10,6 +10,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Link, useRouter } from "expo-router";
+import axios from "axios";
 
 export default function LogIn() {
   const router = useRouter();
@@ -25,6 +26,21 @@ export default function LogIn() {
     alert(email + " " + password);
     router.push("/nutrients"); // naviage to the page after log in
     return true;
+  };
+
+  const handleLogin = async () => {
+    const passedUserData = {
+      email: email,
+      password: password,
+    };
+    axios.post("http://localhost:3000/login", passedUserData).then((res) => {
+      if (!res.data.ERROR && res.status === 200) {
+        alert("Logged in successfully");
+        router.push("/nutrients");
+      } else {
+        alert("Invalid username or password");
+      }
+    });
   };
 
   return (

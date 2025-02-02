@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 
 import { Link, useRouter } from "expo-router";
+import axios from "axios";
 
 export default function SignUp() {
   const router = useRouter();
@@ -74,6 +75,28 @@ export default function SignUp() {
         setAge(userInput ? (parseInt(userInput) || 0).toString() : "0");
       }
     }
+  };
+
+  const handleSignup = async () => {
+    const passedUserData = {
+      email: email,
+      username: username,
+      password: password,
+      age: age,
+      height: height,
+      weight: weight,
+      protein: goals.protein,
+      calories: goals.calories,
+    };
+
+    axios.post("http://localhost:3000/signup", passedUserData).then((res) => {
+      if (!res.data.ERROR && res.status === 200) {
+        alert("Logged in successfully");
+        router.push("/nutrients");
+      } else {
+        alert("An unexpected error occurred. Please try again later.");
+      }
+    });
   };
 
   return (
