@@ -4,88 +4,173 @@ import {
   TouchableOpacity,
   TextInput,
   Text,
+  ScrollView,
 } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useState } from "react";
+
 import { Link, useRouter } from "expo-router";
 
 export default function SignUp() {
   const router = useRouter();
 
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [height, setHeight] = React.useState("");
-  const [weight, setWeight] = React.useState("");
-  const [activitylvl, setActivitylvl] = React.useState("");
-  const [goals, setgoals] = React.useState({ protien: 0, calories: 0 });
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  //   const [activitylvl, setActivitylvl] = React.useState("");
+  const [goals, setGoals] = useState({ protein: "", calories: "" });
+  const [age, setAge] = useState("");
+
+  const validateInput = () => {
+    if (
+      email === "" ||
+      password === "" ||
+      height === "" ||
+      weight === "" ||
+      username === "" ||
+      //   activitylvl === "" ||
+      goals.protein === "" ||
+      goals.calories === "" ||
+      age === ""
+    ) {
+      alert("Please fill in all fields");
+      return false;
+    } else {
+      //api call to create account
+      alert("Account Crated!");
+      router.push("/nutrients");
+      return true;
+    }
+  };
+
+  const updateGoals = (userInput: string, goal: string) => {
+    if (goal === "protein") {
+      setGoals((prevGoals: any) => ({
+        ...prevGoals,
+        protein: userInput ? parseInt(userInput) || 0 : 0,
+      }));
+    } else if (goal === "calories") {
+      setGoals((prevGoals: any) => ({
+        ...prevGoals,
+        calories: userInput ? parseInt(userInput) || 0 : 0,
+      }));
+    }
+  };
+
+  const validatePersonalInfo = (userInput: string, modifier: string) => {
+    if (modifier === "height") {
+      setHeight(userInput ? (parseInt(userInput) || 0).toString() : "0");
+    } else if (modifier === "weight") {
+      setWeight(userInput ? (parseInt(userInput) || 0).toString() : "0");
+    } else if (modifier === "age") {
+      if (parseInt(userInput) < 0 || parseInt(userInput) > 100) {
+        alert("Please enter a valid age");
+        setAge("0");
+      } else {
+        setAge(userInput ? (parseInt(userInput) || 0).toString() : "0");
+      }
+    }
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ThemedText type="title" style={styles.sharedText}>
-        Sign Up
-      </ThemedText>
+    <ScrollView>
+      <SafeAreaView style={styles.container}>
+        <ThemedText type="title" style={styles.sharedText}>
+          Sign Up
+        </ThemedText>
 
-      <SafeAreaView>
-        <TextInput
-          style={[styles.sharedText, styles.input]}
-          onChangeText={setEmail}
-          value={email}
-          placeholder="Username"
-        />
+        <SafeAreaView>
+          <TextInput
+            style={[styles.sharedText, styles.input]}
+            onChangeText={setEmail}
+            value={email}
+            placeholder="Email"
+          />
 
-        <TextInput
-          style={[styles.sharedText, styles.input]}
-          onChangeText={setPassword}
-          value={password}
-          placeholder="Password"
-          secureTextEntry={true}
-        />
+          <TextInput
+            style={[styles.sharedText, styles.input]}
+            onChangeText={setUsername}
+            value={username}
+            placeholder="Username"
+          />
 
-        <TextInput
-          style={[styles.sharedText, styles.input]}
-          onChangeText={setHeight}
-          value={height}
-          placeholder="Height (cm)"
-        />
+          <TextInput
+            style={[styles.sharedText, styles.input]}
+            onChangeText={setPassword}
+            value={password}
+            placeholder="Password"
+            secureTextEntry={true}
+          />
 
-        <TextInput
-          style={[styles.sharedText, styles.input]}
-          onChangeText={setWeight}
-          value={weight}
-          placeholder="Weight (kgs)"
-        />
+          <TextInput
+            style={[styles.sharedText, styles.input]}
+            onChangeText={(value) => {
+              validatePersonalInfo(value, "age");
+            }}
+            value={parseInt(age) == 0 ? "" : age}
+            placeholder="Age (years)"
+          />
 
-        <ThemedText style={styles.sharedText}>Goals</ThemedText>
-        <TextInput
-          style={[styles.sharedText, styles.input]}
-          onChangeText={setWeight}
-          value={weight}
-          placeholder="Protien (g)"
-        />
+          <TextInput
+            style={[styles.sharedText, styles.input]}
+            onChangeText={(value) => {
+              validatePersonalInfo(value, "height");
+            }}
+            value={parseInt(height) == 0 ? "" : height}
+            placeholder="Height (cm)"
+            keyboardType="numeric"
+          />
 
-        <TextInput
-          style={[styles.sharedText, styles.input]}
-          onChangeText={setWeight}
-          value={weight}
-          placeholder="Calories"
-        />
+          <TextInput
+            style={[styles.sharedText, styles.input]}
+            onChangeText={(value) => {
+              validatePersonalInfo(value, "weight");
+            }}
+            value={parseInt(weight) == 0 ? "" : weight}
+            placeholder="Weight (kgs)"
+            keyboardType="numeric"
+          />
+
+          <ThemedText style={styles.sharedText}>Goals</ThemedText>
+          <TextInput
+            style={[styles.sharedText, styles.input]}
+            onChangeText={(value) => {
+              updateGoals(value, "protein");
+            }}
+            value={parseInt(goals.protein) == 0 ? "" : goals.protein}
+            placeholder="Protien (g)"
+            keyboardType="numeric"
+          />
+
+          <TextInput
+            style={[styles.sharedText, styles.input]}
+            onChangeText={(value) => {
+              updateGoals(value, "calories");
+            }}
+            value={parseInt(goals.calories) == 0 ? "" : goals.calories}
+            placeholder="Calories"
+            keyboardType="numeric"
+          />
+        </SafeAreaView>
+
+        <TouchableOpacity
+          style={styles.TouchableOpacityButton}
+          onPress={validateInput}
+        >
+          <Ionicons
+            name="arrow-forward"
+            size={24}
+            color="black"
+            style={styles.icon}
+          />
+          <Text style={[styles.sharedText, styles.buttonText]}>Sign Up</Text>
+        </TouchableOpacity>
       </SafeAreaView>
-
-      <TouchableOpacity
-        style={styles.TouchableOpacityButton}
-        onPress={() => router.push("/")}
-      >
-        <Ionicons
-          name="arrow-forward"
-          size={24}
-          color="black"
-          style={styles.icon}
-        />
-        <Text style={[styles.sharedText, styles.buttonText]}>Sign Up</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+    </ScrollView>
   );
 }
 
@@ -123,7 +208,7 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     width: 300,
-    margin: 12,
+    margin: 10,
     borderWidth: 1,
     padding: 10,
     textAlign: "left",

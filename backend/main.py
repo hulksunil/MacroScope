@@ -52,7 +52,7 @@ def get_top_5_predictions(output, labels_list):
 
 # Function to get nutrition info using Gemini API
 def get_nutrition_info(food_item):
-    prompt = f"Provide estimate nutritional information for {food_item} shown in the image in JSON format with keys: calories, protein_g, fat_g, carbs_g, fiber_g. Do not include any other information at all! Example: {{\"calories\": 100, \"protein_g\": 10, \"fat_g\": 5, \"carbs_g\": 20, \"fiber_g\": 2}}"
+    prompt = f"Provide estimate nutritional information for {food_item} shown in the image in JSON format with keys: calories, protein_g, fat_g, carbs_g, fiber_g. Do not include any other information at all and no mark down formatting! Example: {{\"calories\": 100, \"protein_g\": 10, \"fat_g\": 5, \"carbs_g\": 20, \"fiber_g\": 2}}"
     model = genai.GenerativeModel("gemini-1.5-pro")  # Use Gemini Pro Model
 
     # load the image (uses the same image as the food classification endpoint)
@@ -62,7 +62,7 @@ def get_nutrition_info(food_item):
     try:
         # Ensure the response is a valid JSON string
         nutrition_info = response.text.strip()
-
+        print(nutrition_info)
         # Convert to dictionary (ensure the API returns JSON-like output)
         return eval(nutrition_info)
     except:

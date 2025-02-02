@@ -52,7 +52,7 @@ export default function LandingPage() {
 
         <TouchableOpacity
           style={styles.TouchableOpacityButton}
-          onPress={() => router.push("/login")}
+          onPress={() => router.push("/signup")}
         >
           <Ionicons name="create" size={24} color="black" style={styles.icon} />
           <Text style={[styles.sharedText, styles.buttonText]}>Sign up</Text>
