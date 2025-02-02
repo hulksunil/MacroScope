@@ -10,11 +10,12 @@ import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Link, useRouter } from "expo-router";
-import { Colors } from "@/constants/Colors";
 import { useFonts } from "expo-font";
+import { Colors } from "@/constants/Colors";
 
-export default function LandingPage() {
+export default function Nutrients() {
   const router = useRouter();
+
   const fontsLoaded = useFonts({
     WorkSans: require("../assets/fonts/WorkSans-VariableFont_wght.ttf"),
   });
@@ -24,16 +25,6 @@ export default function LandingPage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ThemedText type="title" style={styles.sharedText}>
-        MACROSCOPE
-      </ThemedText>
-
-      <View style={styles.sloganContainer}>
-        <ThemedText style={styles.sharedText}>
-          Through a lens, see your macros
-        </ThemedText>
-      </View>
-
       <View>
         <TouchableOpacity
           style={styles.TouchableOpacityButton}
@@ -43,27 +34,6 @@ export default function LandingPage() {
           <Text style={[styles.sharedText, styles.buttonText]}>
             Open Camera
           </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.TouchableOpacityButton}
-          onPress={() => router.push("/login")}
-        >
-          <Ionicons
-            name="arrow-forward"
-            size={24}
-            color="black"
-            style={styles.icon}
-          />
-          <Text style={[styles.sharedText, styles.buttonText]}>Log In</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.TouchableOpacityButton}
-          onPress={() => router.push("/signup")}
-        >
-          <Ionicons name="create" size={24} color="black" style={styles.icon} />
-          <Text style={[styles.sharedText, styles.buttonText]}>Sign up</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -83,11 +53,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
-  sloganContainer: {
-    marginTop: 50,
-  },
-
   TouchableOpacityButton: {
     flexDirection: "row",
     alignItems: "center",
