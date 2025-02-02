@@ -6,3 +6,6 @@ opencv-python
 tensorflow
 flask
 cv2
+flask_cors
+google.generativeai
+python-dotenv
