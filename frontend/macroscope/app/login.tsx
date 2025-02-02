@@ -11,10 +11,17 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Link, useRouter } from "expo-router";
 import axios from "axios";
+import { Colors } from "@/constants/Colors";
+import { useFonts } from "expo-font";
 
 export default function LogIn() {
   const router = useRouter();
-
+  const fontsLoaded = useFonts({
+    WorkSans: require("../assets/fonts/WorkSans-VariableFont_wght.ttf"),
+  });
+  if (!fontsLoaded) {
+    return null;
+  }
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -54,7 +61,8 @@ export default function LogIn() {
           style={[styles.sharedText, styles.input]}
           onChangeText={setEmail}
           value={email}
-          placeholder="Email"
+          placeholder="Username"
+          placeholderTextColor={"white"}
         />
 
         <TextInput
@@ -63,6 +71,7 @@ export default function LogIn() {
           value={password}
           placeholder="Password"
           secureTextEntry={true}
+          placeholderTextColor={"white"}
         />
       </SafeAreaView>
 
@@ -84,20 +93,20 @@ export default function LogIn() {
 
 const styles = StyleSheet.create({
   sharedText: {
-    fontFamily: "Roboto",
-    color: "white",
+    fontFamily: "WorkSans",
+    color: Colors.terciary_colors,
     textAlign: "center",
   },
   container: {
     flex: 1,
-    backgroundColor: "#172a4a",
+    backgroundColor: Colors.primary_colors,
     alignItems: "center",
     justifyContent: "center",
   },
   TouchableOpacityButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1e90ff",
+    backgroundColor: Colors.secondary_colors,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -109,7 +118,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   buttonText: {
-    color: "black",
+    color: "white",
     fontSize: 20,
     paddingLeft: 10,
   },

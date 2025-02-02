@@ -10,11 +10,18 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-
 import { Link, useRouter } from "expo-router";
 import axios from "axios";
+import { Colors } from "@/constants/Colors";
+import { useFonts } from "expo-font";
 
 export default function SignUp() {
+  const fontsLoaded = useFonts({
+    WorkSans: require("../assets/fonts/WorkSans-VariableFont_wght.ttf"),
+  });
+  if (!fontsLoaded) {
+    return null;
+  }
   const router = useRouter();
 
   const [email, setEmail] = useState("");
@@ -25,6 +32,28 @@ export default function SignUp() {
   //   const [activitylvl, setActivitylvl] = React.useState("");
   const [goals, setGoals] = useState({ protein: "", calories: "" });
   const [age, setAge] = useState("");
+
+  const handleSignup = async () => {
+    const passedUserData = {
+      email: email,
+      username: username,
+      password: password,
+      age: age,
+      height: height,
+      weight: weight,
+      protein: goals.protein,
+      calories: goals.calories,
+    };
+
+    axios.post("http://localhost:3000/signup", passedUserData).then((res) => {
+      if (!res.data.ERROR && res.status === 200) {
+        alert("Logged in successfully");
+        router.push("/nutrients");
+      } else {
+        alert("An unexpected error occurred. Please try again later.");
+      }
+    });
+  };
 
   const validateInput = () => {
     if (
@@ -75,28 +104,6 @@ export default function SignUp() {
         setAge(userInput ? (parseInt(userInput) || 0).toString() : "0");
       }
     }
-  };
-
-  const handleSignup = async () => {
-    const passedUserData = {
-      email: email,
-      username: username,
-      password: password,
-      age: age,
-      height: height,
-      weight: weight,
-      protein: goals.protein,
-      calories: goals.calories,
-    };
-
-    axios.post("http://localhost:3000/signup", passedUserData).then((res) => {
-      if (!res.data.ERROR && res.status === 200) {
-        alert("Logged in successfully");
-        router.push("/nutrients");
-      } else {
-        alert("An unexpected error occurred. Please try again later.");
-      }
-    });
   };
 
   return (
@@ -199,20 +206,20 @@ export default function SignUp() {
 
 const styles = StyleSheet.create({
   sharedText: {
-    fontFamily: "Roboto",
-    color: "white",
+    fontFamily: "WorkSans",
+    color: Colors.terciary_colors,
     textAlign: "center",
   },
   container: {
     flex: 1,
-    backgroundColor: "#172a4a",
+    backgroundColor: Colors.primary_colors,
     alignItems: "center",
     justifyContent: "center",
   },
   TouchableOpacityButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1e90ff",
+    backgroundColor: Colors.secondary_colors,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -231,7 +238,7 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     width: 300,
-    margin: 10,
+    margin: 12,
     borderWidth: 1,
     padding: 10,
     textAlign: "left",

@@ -10,9 +10,18 @@ import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Link, useRouter } from "expo-router";
+import { useFonts } from "expo-font";
+import { Colors } from "@/constants/Colors";
 
 export default function Nutrients() {
   const router = useRouter();
+
+  const fontsLoaded = useFonts({
+    WorkSans: require("../assets/fonts/WorkSans-VariableFont_wght.ttf"),
+  });
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -33,20 +42,21 @@ export default function Nutrients() {
 
 const styles = StyleSheet.create({
   sharedText: {
-    fontFamily: "Roboto",
-    color: "white",
+    fontFamily: "WorkSans",
+    color: Colors.terciary_colors,
     textAlign: "center",
   },
+
   container: {
     flex: 1,
-    backgroundColor: "#172a4a",
+    backgroundColor: Colors.primary_colors,
     alignItems: "center",
     justifyContent: "center",
   },
   TouchableOpacityButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1e90ff",
+    backgroundColor: Colors.secondary_colors,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -58,7 +68,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   buttonText: {
-    color: "black",
+    color: "white",
     fontSize: 20,
     paddingLeft: 10,
   },
