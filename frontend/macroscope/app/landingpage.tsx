@@ -10,14 +10,22 @@ import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Link, useRouter } from "expo-router";
+import { Colors } from "@/constants/Colors";
+import { useFonts } from "expo-font";
 
 export default function LandingPage() {
   const router = useRouter();
+  const fontsLoaded = useFonts({
+    WorkSans: require("../assets/fonts/WorkSans-VariableFont_wght.ttf"),
+  });
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <ThemedText type="title" style={styles.sharedText}>
-        MacroScope
+        MACROSCOPE
       </ThemedText>
 
       <View style={styles.sloganContainer}>
@@ -52,7 +60,7 @@ export default function LandingPage() {
 
         <TouchableOpacity
           style={styles.TouchableOpacityButton}
-          onPress={() => router.push("/login")}
+          onPress={() => router.push("/signup")}
         >
           <Ionicons name="create" size={24} color="black" style={styles.icon} />
           <Text style={[styles.sharedText, styles.buttonText]}>Sign up</Text>
@@ -64,14 +72,14 @@ export default function LandingPage() {
 
 const styles = StyleSheet.create({
   sharedText: {
-    fontFamily: "Roboto",
-    color: "white",
+    fontFamily: "WorkSans",
+    color: Colors.terciary_colors,
     textAlign: "center",
   },
 
   container: {
     flex: 1,
-    backgroundColor: "#172a4a",
+    backgroundColor: Colors.primary_colors,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -83,7 +91,7 @@ const styles = StyleSheet.create({
   TouchableOpacityButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1e90ff",
+    backgroundColor: Colors.secondary_colors,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -95,7 +103,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   buttonText: {
-    color: "black",
+    color: "white",
     fontSize: 20,
     paddingLeft: 10,
   },

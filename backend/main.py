@@ -62,7 +62,7 @@ def get_nutrition_info(food_item):
     try:
         # Ensure the response is a valid JSON string
         nutrition_info = response.text.strip()
-
+        print(nutrition_info)
         # Convert to dictionary (ensure the API returns JSON-like output)
         return eval(nutrition_info)
     except:

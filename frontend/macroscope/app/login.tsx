@@ -10,12 +10,45 @@ import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { Link, useRouter } from "expo-router";
+import axios from "axios";
+import { Colors } from "@/constants/Colors";
+import { useFonts } from "expo-font";
 
 export default function LogIn() {
   const router = useRouter();
-
+  const fontsLoaded = useFonts({
+    WorkSans: require("../assets/fonts/WorkSans-VariableFont_wght.ttf"),
+  });
+  if (!fontsLoaded) {
+    return null;
+  }
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  const validateInput = () => {
+    if (email === "" || password === "") {
+      alert("Please fill in all fields");
+      return false;
+    }
+    alert(email + " " + password);
+    router.push("/nutrients"); // naviage to the page after log in
+    return true;
+  };
+
+  const handleLogin = async () => {
+    const passedUserData = {
+      email: email,
+      password: password,
+    };
+    axios.post("http://localhost:3000/login", passedUserData).then((res) => {
+      if (!res.data.ERROR && res.status === 200) {
+        alert("Logged in successfully");
+        router.push("/nutrients");
+      } else {
+        alert("Invalid username or password");
+      }
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -29,6 +62,7 @@ export default function LogIn() {
           onChangeText={setEmail}
           value={email}
           placeholder="Username"
+          placeholderTextColor={"white"}
         />
 
         <TextInput
@@ -37,43 +71,42 @@ export default function LogIn() {
           value={password}
           placeholder="Password"
           secureTextEntry={true}
+          placeholderTextColor={"white"}
         />
       </SafeAreaView>
 
-      <Link href="/">
-        <TouchableOpacity
-          style={styles.TouchableOpacityButton}
-          onPress={() => router.push("/")}
-        >
-          <Ionicons
-            name="arrow-forward"
-            size={24}
-            color="black"
-            style={styles.icon}
-          />
-          <Text style={[styles.sharedText, styles.buttonText]}>Log in</Text>
-        </TouchableOpacity>
-      </Link>
+      <TouchableOpacity
+        style={styles.TouchableOpacityButton}
+        onPress={validateInput}
+      >
+        <Ionicons
+          name="arrow-forward"
+          size={24}
+          color="black"
+          style={styles.icon}
+        />
+        <Text style={[styles.sharedText, styles.buttonText]}>Log in</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   sharedText: {
-    fontFamily: "Roboto",
-    color: "white",
+    fontFamily: "WorkSans",
+    color: Colors.terciary_colors,
     textAlign: "center",
   },
   container: {
     flex: 1,
-    backgroundColor: "#172a4a",
+    backgroundColor: Colors.primary_colors,
     alignItems: "center",
     justifyContent: "center",
   },
   TouchableOpacityButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1e90ff",
+    backgroundColor: Colors.secondary_colors,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -85,7 +118,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   buttonText: {
-    color: "black",
+    color: "white",
     fontSize: 20,
     paddingLeft: 10,
   },
