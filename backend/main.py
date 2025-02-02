@@ -6,12 +6,39 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
 from flask import Flask, request, jsonify
+from flask_cors import CORS
+
+import google.generativeai as genai  # Gemini API
+import os
+from dotenv import load_dotenv  # Import dotenv to load environment variables
+
+import PIL.Image
+
+# Load environment variables from .env file
+load_dotenv()
 
 m = hub.KerasLayer(
     'https://www.kaggle.com/models/google/aiy/TensorFlow1/vision-classifier-food-v1/1')
 
 # Initialize Flask app
 app = Flask(__name__)
+
+# Enable CORS
+CORS(app)
+
+
+# Configure genai with API key
+genai_api_key = os.getenv("GEMINI_API_KEY")
+
+# Configure Gemini API
+if genai_api_key:
+    genai.configure(api_key=genai_api_key)
+else:
+    raise ValueError("Missing Gemini API Key. Please check your .env file.")
+
+
+last_image = None
+
 
 def get_top_5_predictions(output, labels_list):
     # Convert logits to probabilities
@@ -21,9 +48,29 @@ def get_top_5_predictions(output, labels_list):
     return [labels_list[idx] if 0 <= idx < len(labels_list) else "Unknown Food" for idx in top_5_indices]
 
 
+# Function to get nutrition info using Gemini API
+def get_nutrition_info(food_item):
+    prompt = f"Provide estimate nutritional information for {food_item} shown in the image in JSON format with keys: calories, protein_g, fat_g, carbs_g, fiber_g. Do not include any other information at all! Example: {{\"calories\": 100, \"protein_g\": 10, \"fat_g\": 5, \"carbs_g\": 20, \"fiber_g\": 2}}"
+    model = genai.GenerativeModel("gemini-1.5-pro")  # Use Gemini Pro Model
+
+    # load the image (uses the same image as the food classification endpoint)
+    myfile = PIL.Image.open("uploads/image.jpg")
+
+    response = model.generate_content([myfile, "\n\n", prompt])
+    try:
+        # Ensure the response is a valid JSON string
+        nutrition_info = response.text.strip()
+
+        # Convert to dictionary (ensure the API returns JSON-like output)
+        return eval(nutrition_info)
+    except:
+        return {"error": "Failed to parse response"}
+
+
 # Define the API endpoint for food classification
 @app.route('/classify', methods=['POST'])
 def classify_food():
+    print("Classifying food")
     # Get uploaded image from the request
     image_file = request.files.get('image')
     # image_file = "uploads/image.jpg"
@@ -55,6 +102,22 @@ def classify_food():
     predictions = get_top_5_predictions(output, classes)
 
     return jsonify({"top_5_predictions": predictions})
+
+
+@app.route('/nutrition', methods=['POST'])
+def get_nutrients():
+    print("Getting nutrients")
+    # Call the Gemini API to get the nutrients
+    data = request.json
+    food_item = data.get("food_item")  # Get food name from request
+
+    if not food_item:
+        return jsonify({"error": "No food item provided"}), 400
+
+    nutrition_info = get_nutrition_info(food_item)
+
+    return jsonify({"food_item": food_item, "nutrition_info": nutrition_info})
+
 
 if __name__ == '__main__':
     # Run the Flask app
