@@ -25,7 +25,7 @@ export default function LandingPage() {
       </View>
 
       <View>
-        <Link href="/">
+        <Link href="/(tabs)/camera">
           <TouchableOpacity style={styles.TouchableOpacityButton}>
             <Ionicons
               name="camera"
