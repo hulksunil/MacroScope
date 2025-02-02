@@ -9,13 +9,9 @@ import {
 import { ThemedText } from "@/components/ThemedText";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { Link } from "expo-router";
 
 export default function LandingPage() {
-  const openCamera = () => {
-    console.log("Open Camera");
-    window.alert("Open Camera");
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <ThemedText type="title" style={styles.sharedText}>
@@ -29,36 +25,43 @@ export default function LandingPage() {
       </View>
 
       <View>
-        <TouchableOpacity
-          style={styles.TouchableOpacityButton}
-          onPress={() => alert("Button Clicked")}
-        >
-          <Ionicons name="camera" size={24} color="black" style={styles.icon} />
-          <Text style={[styles.sharedText, styles.buttonText]}>
-            Open Camera
-          </Text>
-        </TouchableOpacity>
+        <Link href="/">
+          <TouchableOpacity style={styles.TouchableOpacityButton}>
+            <Ionicons
+              name="camera"
+              size={24}
+              color="black"
+              style={styles.icon}
+            />
+            <Text style={[styles.sharedText, styles.buttonText]}>
+              Open Camera
+            </Text>
+          </TouchableOpacity>
+        </Link>
 
-        <TouchableOpacity
-          style={styles.TouchableOpacityButton}
-          onPress={() => alert("Button Clicked")}
-        >
-          <Ionicons
-            name="arrow-forward"
-            size={24}
-            color="black"
-            style={styles.icon}
-          />
-          <Text style={[styles.sharedText, styles.buttonText]}>Log In</Text>
-        </TouchableOpacity>
+        <Link href="/login">
+          <TouchableOpacity style={styles.TouchableOpacityButton}>
+            <Ionicons
+              name="arrow-forward"
+              size={24}
+              color="black"
+              style={styles.icon}
+            />
+            <Text style={[styles.sharedText, styles.buttonText]}>Log In</Text>
+          </TouchableOpacity>
+        </Link>
 
-        <TouchableOpacity
-          style={styles.TouchableOpacityButton}
-          onPress={() => alert("Button Clicked")}
-        >
-          <Ionicons name="create" size={24} color="black" style={styles.icon} />
-          <Text style={[styles.sharedText, styles.buttonText]}>Sign up</Text>
-        </TouchableOpacity>
+        <Link href="/signup">
+          <TouchableOpacity style={styles.TouchableOpacityButton}>
+            <Ionicons
+              name="create"
+              size={24}
+              color="black"
+              style={styles.icon}
+            />
+            <Text style={[styles.sharedText, styles.buttonText]}>Sign up</Text>
+          </TouchableOpacity>
+        </Link>
       </View>
     </SafeAreaView>
   );
