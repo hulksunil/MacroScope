@@ -1,7 +1,7 @@
 import { Fontisto } from '@expo/vector-icons';
 import { CameraCapturedPicture } from 'expo-camera';
 import React from 'react';
-import { TouchableOpacity, SafeAreaView, Image, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, SafeAreaView, Image, StyleSheet, View, Text } from 'react-native';
 
 const PhotoPreviewSection = ({
     photo,
@@ -36,14 +36,14 @@ const styles = StyleSheet.create({
     box: {
         borderRadius: 15,
         padding: 1,
-        width: '95%',
+        width: '97%',
         backgroundColor: 'darkgray',
         justifyContent: 'center',
         alignItems: "center",
     },
     previewContainer: {  // Fixed typo
-        width: '95%',
-        height: '85%',
+        width: '90%',
+        height: '80%',
         borderRadius: 15
     },
     buttonContainer: {
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
         padding: 10,
         alignItems: 'center',
         justifyContent: 'center',
+        marginBottom: 28
     }
 });
 
