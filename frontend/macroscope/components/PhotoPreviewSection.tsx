@@ -20,7 +20,9 @@ const PhotoPreviewSection = ({
 
         <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={handleRetakePhoto}>
-                <Fontisto name="trash" size={36} color="black" />  {/* Added name prop */}
+            <Text>
+                    <Fontisto name="trash" size={36} color="black" />
+                </Text>
             </TouchableOpacity>
         </View>
     </SafeAreaView>
