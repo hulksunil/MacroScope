@@ -19,5 +19,6 @@ Upon project creation, the ".expo" folder is already added to your ".gitignore" 
 npm install
 npm install -g react-native-cli
 npm install -g expo-cli
+npm install @tamagui/core
 
 - be in the right folder
