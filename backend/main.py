@@ -50,14 +50,23 @@ def get_top_5_predictions(output, labels_list):
 
     return [labels_list[idx] if 0 <= idx < len(labels_list) else "Unknown Food" for idx in top_5_indices]
 
+# resize the image before processing it 
+def resize_image(image_path, max_size=(300, 300)):  # Adjust size as needed
+    img = PIL.Image.open(image_path)
+    img.thumbnail(max_size)  # Maintains aspect ratio
+    img.save(image_path, "JPEG", quality=85)  # Adjust quality to reduce file size further
+    return image_path
 
 # Function to get nutrition info using Gemini API
 def get_nutrition_info(food_item):
     prompt = f"Provide estimate nutritional information for {food_item} shown in the image in JSON format with keys: calories, protein_g, fat_g, carbs_g, fiber_g. Do not include any other information at all and no mark down formatting! Example: {{\"calories\": 100, \"protein_g\": 10, \"fat_g\": 5, \"carbs_g\": 20, \"fiber_g\": 2}}"
     model = genai.GenerativeModel("gemini-1.5-pro")  # Use Gemini Pro Model
 
+    image_path = "uploads/image.jpg"
+    resized_image_path = resize_image(image_path)
+
     # load the image (uses the same image as the food classification endpoint)
-    myfile = PIL.Image.open("uploads/image.jpg")
+    myfile = PIL.Image.open(resized_image_path)
 
     response = model.generate_content([myfile, "\n\n", prompt])
     try:
@@ -68,6 +77,8 @@ def get_nutrition_info(food_item):
         return eval(nutrition_info)
     except:
         return {"error": "Failed to parse response"}
+    
+
 
 
 # Define the API endpoint for food classification
@@ -115,6 +126,7 @@ def get_nutrients():
     # Call the Gemini API to get the nutrients
     data = request.json
     food_item = data.get("food_item")  # Get food name from request
+    print(f"food_item= {food_item}")
     email = data.get("email")
 
     if not food_item:

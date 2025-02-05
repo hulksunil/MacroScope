@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet,SafeAreaView } from 'react-native';
 import axios from 'axios';
 
 const RecommendedMeals = () => {
@@ -18,6 +18,7 @@ const RecommendedMeals = () => {
     }, []);
 
     return (
+        <SafeAreaView style={styles.container}>
         <View style={styles.container}>
             <Text style={styles.title}>Recommended Meals for Today</Text>
             <FlatList
@@ -31,6 +32,7 @@ const RecommendedMeals = () => {
                 )}
             />
         </View>
+        </SafeAreaView>
     );
 };
 

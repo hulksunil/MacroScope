@@ -1,4 +1,5 @@
 import PhotoPreviewSection from '@/components/PhotoPreviewSection';
+import NutritionDisplay from '@/components/NutritionDisplay';
 import { AntDesign } from '@expo/vector-icons';
 import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
 import { useRef, useState } from 'react';
@@ -17,6 +18,8 @@ export default function Camera() {
   const [photoConfirmed, setPhotoConfirmed] = useState(false);
   const [isUploaded, setIsUploaded] = useState(false);
   const cameraRef = useRef<CameraView | null>(null);
+  const [nutritionData, setNutritionData] = useState<any>(null); // Store nutrition details
+
 
   useEffect(() => {
     if (predictions.length > 0) {
@@ -97,17 +100,17 @@ export default function Camera() {
   };
   
 
-  // 👇 Handles food item selection by user
+  // Handles food item selection by user
 const handleSelectFood = (food: string) => {
   setSelectedFood(food);
 };
 
-// 👇 Submits the selected food to the backend
+// Submits the selected food to the backend
 const handleSubmitFood = async () => {
   if (!selectedFood) return;
 
   try {
-    // 👇 Send selection to new endpoint
+    // Send selection to new endpoint
     const response = await axios.post('http://172.20.10.3:5001/nutrition', {
       "food_item": selectedFood,
       "email": "test@email.com"
@@ -115,8 +118,10 @@ const handleSubmitFood = async () => {
     
     console.log('Submission response:', response.data);
     alert('Selection submitted successfully!');
+    setNutritionData(response.data);
 
 
+    // resets the camera page
     setPhoto(null);
     setPredictions([]);
     setSelectedFood(null);
@@ -130,7 +135,7 @@ const handleSubmitFood = async () => {
   }
 };
 
-  
+  // when there's a photo, returns photoPreview page
   if (photo) {
     return <PhotoPreviewSection 
     photo={photo} 
@@ -143,9 +148,15 @@ const handleSubmitFood = async () => {
     photoConfirmed={photoConfirmed}  // Pass state
     setPhotoConfirmed={setPhotoConfirmed} // Pass function to update it
     isUploaded={isUploaded}
+    nutritionData={nutritionData}
 />
 }
 
+if (nutritionData) {
+  return <NutritionDisplay photo={photo} nutritionData={nutritionData} />;
+}
+
+// layout
   return (
     <View style={styles.container}>
       <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
@@ -162,6 +173,7 @@ const handleSubmitFood = async () => {
   );
 }
 
+// styling
 const styles = StyleSheet.create({
   container: {
     flex: 1,

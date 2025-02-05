@@ -2,6 +2,7 @@ import { Fontisto } from '@expo/vector-icons';
 import { CameraCapturedPicture } from 'expo-camera';
 import React from 'react';
 import { TouchableOpacity, SafeAreaView, Image, StyleSheet, View, Text, FlatList } from 'react-native';
+import NutritionDisplay from '@/components/NutritionDisplay';
 
 const PhotoPreviewSection = ({
     photo,
@@ -13,7 +14,8 @@ const PhotoPreviewSection = ({
     handleSubmitFood,
     photoConfirmed,
     setPhotoConfirmed,
-    isUploaded
+    isUploaded,
+    nutritionData
 }: {
     photo: CameraCapturedPicture;
     handleRetakePhoto: () => void;
@@ -25,72 +27,71 @@ const PhotoPreviewSection = ({
     photoConfirmed: boolean;
     setPhotoConfirmed: (confirmed: boolean) => void;
     isUploaded: boolean;
-}) => (
-    <SafeAreaView style={styles.container}>
-        <View style={styles.box}>
-            <Image
-                style={styles.previewContainer}
-                source={{ uri: photo.uri }}  
-            />
-        </View>
+    nutritionData: any;
+}) => {
+    // if (nutritionData) {
+    //     return <NutritionDisplay photo={photo} nutritionData={nutritionData} />;
+    // }
 
-        {/* Show confirm & retake options before processing */}
-        {!photoConfirmed ? (
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={handleRetakePhoto}>
-                    <Text>
-                        <Fontisto name="trash" size={36} color="black" />
-                    </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.uploadButton} onPress={() => setPhotoConfirmed(true)}>
-                    <Text style={{ color: 'white' }}>Confirm</Text>
-                </TouchableOpacity>
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.box}>
+                <Image style={styles.previewContainer} source={{ uri: photo.uri }} />
             </View>
-        ) : (
-            <>
-                {/* Upload Button (only shown before predictions are loaded) */}
-                {handleUploadPhoto && predictions.length === 0 && (
-                    <TouchableOpacity onPress={handleUploadPhoto} style={styles.uploadButton}>
-                        <Text style={{ color: 'white' }}>Upload Photo</Text>
+
+            {!photoConfirmed ? (
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.button} onPress={handleRetakePhoto}>
+                        <Text>
+                            <Fontisto name="trash" size={36} color="black" />
+                        </Text>
                     </TouchableOpacity>
-                )}
 
-                {/* Show food choices only after uploading */}
-                {predictions.length > 0 && (
-                    <>
-                        <Text style={{ color: 'white', fontSize: 18, marginTop: 10 }}>Select Food:</Text>
-                        <FlatList
-                            data={predictions}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity 
-                                    style={[
-                                        styles.foodItem,
-                                        selectedFood === item && styles.selectedFoodItem
-                                    ]}
-                                    onPress={() => handleSelectFood(item)}
-                                >
-                                    <Text style={{ color: 'white' }}>{item}</Text>
-                                </TouchableOpacity>
+                    <TouchableOpacity style={styles.uploadButton} onPress={() => setPhotoConfirmed(true)}>
+                        <Text style={{ color: 'white' }}>Confirm</Text>
+                    </TouchableOpacity>
+                </View>
+            ) : (
+                <>
+                    {handleUploadPhoto && predictions.length === 0 && (
+                        <TouchableOpacity onPress={handleUploadPhoto} style={styles.uploadButton}>
+                            <Text style={{ color: 'white' }}>Upload Photo</Text>
+                        </TouchableOpacity>
+                    )}
+
+                    {predictions.length > 0 && (
+                        <>
+                            <Text style={{ color: 'white', fontSize: 18, marginTop: 10 }}>Select Food:</Text>
+                            <FlatList
+                                data={predictions}
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity 
+                                        style={[
+                                            styles.foodItem,
+                                            selectedFood === item && styles.selectedFoodItem
+                                        ]}
+                                        onPress={() => handleSelectFood(item)}
+                                    >
+                                        <Text style={{ color: 'white' }}>{item}</Text>
+                                    </TouchableOpacity>
+                                )}
+                                keyExtractor={(item) => item}
+                            />
+
+                            {selectedFood && (
+                                <View style={styles.submitContainer}>
+                                    <TouchableOpacity onPress={handleSubmitFood} style={styles.submitButton}>
+                                        <Text style={{ color: 'white' }}>Submit Selection</Text>
+                                    </TouchableOpacity>
+                                </View>
                             )}
-                            keyExtractor={(item) => item}
-                        />
-
-                        {/* Submit button centered below the list */}
-                        {selectedFood && (
-                            <View style={styles.submitContainer}>
-                                <TouchableOpacity onPress={handleSubmitFood} style={styles.submitButton}>
-                                    <Text style={{ color: 'white' }}>Submit Selection</Text>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                    </>
-                )}
-            </>
-        )}
-    </SafeAreaView>
-);
-
+                        </>
+                    )}
+                </>
+            )}
+        </SafeAreaView>
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -109,15 +110,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     previewContainer: {
-        width: '100%', 
-        height: 400,  // ✅ Large size before upload
-        borderRadius: 15,
-        resizeMode: 'contain',
-        marginBottom: 10,
-    },
-    smallPreviewContainer: {
-        width: '100%', 
-        height: 200,  // ✅ Smaller size after upload
+        width: '100%',
+        height: 400,
         borderRadius: 15,
         resizeMode: 'contain',
         marginBottom: 10,
@@ -151,17 +145,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#e0e0e0',
     },
     submitContainer: {
-        alignItems: 'center', // Center the button
+        alignItems: 'center',
         marginBottom: 50
     },
     submitButton: {
         padding: 12,
         backgroundColor: 'blue',
         borderRadius: 8,
-        width: '50%', // Ensure proper sizing
+        width: '50%',
         alignItems: 'center',
     }
 });
-
 
 export default PhotoPreviewSection;
