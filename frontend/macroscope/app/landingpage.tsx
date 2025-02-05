@@ -25,7 +25,7 @@ export default function LandingPage() {
   return (
     <SafeAreaView style={styles.container}>
       <ThemedText type="title" style={styles.sharedText}>
-        MACROSCOPE
+        MACROscope
       </ThemedText>
 
       <View style={styles.sloganContainer}>
