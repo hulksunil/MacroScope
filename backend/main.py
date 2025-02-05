@@ -43,6 +43,7 @@ else:
 
 
 def get_top_5_predictions(output, labels_list):
+    print("Getting top 5 predictions")
     # Convert logits to probabilities
     probabilities = tf.nn.softmax(output).numpy()[0]
     top_5_indices = np.argsort(probabilities)[-5:][::-1]  # Get top 5 indices
@@ -76,6 +77,7 @@ def classify_food():
     # Get uploaded image from the request
     image_file = request.files.get('image')
     # image_file = "uploads/image.jpg"
+    print("Image file:", image_file)
 
     if not image_file:
         return jsonify({"error": "No image file provided"}), 400
@@ -83,6 +85,7 @@ def classify_food():
     # Read the image
     image_path = "uploads/image.jpg"
     image_file.save(image_path)
+    print("Image saved")
 
     # Define the labelmap URL (adjust as needed)
     labelmap_url = "labels/labels.csv"
@@ -239,5 +242,5 @@ def login():
 
 if __name__ == '__main__':
     # Run the Flask app
-    app.run(host='0.0.0.0', port=5001, debug=True)
-    # app.run(debug=True)
+    # app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(debug=True)
