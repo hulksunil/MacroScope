@@ -131,6 +131,7 @@ def get_nutrients():
     calories_consumed = nutrition_info.get("calories", 0)
     # update their daily intake
     upsert_daily_intake(email, calories_consumed, protein_consumed, date_obj)
+    print(jsonify({"food_item": food_item, "nutrition_info": nutrition_info}))
 
     return jsonify({"food_item": food_item, "nutrition_info": nutrition_info})
 
@@ -242,5 +243,5 @@ def login():
 
 if __name__ == '__main__':
     # Run the Flask app
-    # app.run(host='0.0.0.0', port=5001, debug=True)
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
+    # app.run(debug=True)

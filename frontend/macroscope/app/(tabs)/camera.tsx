@@ -109,7 +109,8 @@ const handleSubmitFood = async () => {
   try {
     // 👇 Send selection to new endpoint
     const response = await axios.post('http://172.20.10.3:5001/nutrition', {
-      food_item: selectedFood
+      "food_item": selectedFood,
+      "email": "test@email.com"
     });
     
     console.log('Submission response:', response.data);
@@ -125,6 +126,7 @@ const handleSubmitFood = async () => {
   } catch (error) {
     console.error('Submission failed:', error);
     alert('Submission failed. Please try again.');
+    console.log("food item:", selectedFood)
   }
 };
 
